@@ -107,7 +107,7 @@ export class Resolver {
      */
     private resolveCurrent(fixtureIdentify: string, value: string) {
         const currentIndexRegExp = /^[a-z\_\-]+(\d+)$/gi;
-        const currentRegExp = /^([\w-_]+)\(\$current((\+|\-|\/|\*)\d+)\)$/gm;
+        const currentRegExp = /\(\$current((\+|\-|\/|\*)\d+)\)/g;
         const splitting = fixtureIdentify.split(currentIndexRegExp);
 
         if (currentRegExp.test(value)) {
