@@ -64,7 +64,7 @@ export class Resolver {
                 dependencies.push(reference);
             } else if (typeof value === 'string' && value.includes('($current)')) {
                 propertyList[key] = value.replace(
-                    /^([\w-_]+)\(\$current\)$/gm,
+                    /^([\w-_]+)\(\$current\)$/g,
                     this.resolveCurrent(parentReferenceName),
                 );
             } else if (typeof value === 'object' && value !== null) {
@@ -110,6 +110,7 @@ export class Resolver {
     private resolveCurrent(fixtureIdentify: string) {
         const currentIndexRegExp = /^[a-z\_\-]+(\d+)$/gi;
         const splitting = fixtureIdentify.split(currentIndexRegExp);
+
         return splitting[1];
     }
 
