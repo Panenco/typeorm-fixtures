@@ -55,6 +55,7 @@ export class Resolver {
      */
     private resolveDependencies(parentReferenceName: string, propertyList: any): any[] {
         const dependencies = [];
+        const currentRegExp = /\(\$current((\+|\-|\/|\*)\d+)?\)/g;
 
         for (const [key, value] of Object.entries(propertyList)) {
             if (typeof value === 'string' && value.indexOf('@') === 0) {
@@ -62,11 +63,8 @@ export class Resolver {
 
                 propertyList[key] = `@${reference}`;
                 dependencies.push(reference);
-            } else if (typeof value === 'string' && value.includes('($current)')) {
-                propertyList[key] = value.replace(
-                    /\(\$current((\+|\-|\/|\*)\d+)?\)/g,
-                    this.resolveCurrent(parentReferenceName, value),
-                );
+            } else if (typeof value === 'string' && currentRegExp.test(value)) {
+                propertyList[key] = value.replace(currentRegExp, this.resolveCurrent(parentReferenceName, value));
             } else if (typeof value === 'object' && value !== null) {
                 dependencies.push(...this.resolveDependencies(parentReferenceName, value));
             }
@@ -93,7 +91,7 @@ export class Resolver {
                 );
             }
 
-            return reference.replace('($current)', index);
+            return reference.replace(/\(\$current((\+|\-|\/|\*)\d+)?\)/g, index);
         } else if (rangeRegExp.test(reference)) {
             const splitting = reference.split(rangeRegExp);
             sample(range(+splitting[2], +(+splitting[3]) + 1));

@@ -48,14 +48,15 @@ class Resolver {
      */
     resolveDependencies(parentReferenceName, propertyList) {
         const dependencies = [];
+        const currentRegExp = /\(\$current((\+|\-|\/|\*)\d+)?\)/g;
         for (const [key, value] of Object.entries(propertyList)) {
             if (typeof value === 'string' && value.indexOf('@') === 0) {
                 const reference = this.resolveReference(parentReferenceName, value.substr(1));
                 propertyList[key] = `@${reference}`;
                 dependencies.push(reference);
             }
-            else if (typeof value === 'string' && value.includes('($current)')) {
-                propertyList[key] = value.replace(/\(\$current((\+|\-|\/|\*)\d+)?\)/g, this.resolveCurrent(parentReferenceName, value));
+            else if (typeof value === 'string' && currentRegExp.test(value)) {
+                propertyList[key] = value.replace(currentRegExp, this.resolveCurrent(parentReferenceName, value));
             }
             else if (typeof value === 'object' && value !== null) {
                 dependencies.push(...this.resolveDependencies(parentReferenceName, value));
@@ -77,7 +78,7 @@ class Resolver {
             if (!index) {
                 throw new Error(`Error parsed index in reference: "${reference}" and fixture identify: ${fixtureIdentify}`);
             }
-            return reference.replace('($current)', index);
+            return reference.replace(/\(\$current((\+|\-|\/|\*)\d+)?\)/g, index);
         }
         else if (rangeRegExp.test(reference)) {
             const splitting = reference.split(rangeRegExp);
