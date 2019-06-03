@@ -94,7 +94,7 @@ class Resolver {
         const currentRegExp = /^([\w-_]+)\(\$current((\+|\-|\/|\*)\d+)\)$/gm;
         const splitting = fixtureIdentify.split(currentIndexRegExp);
         if (currentRegExp.test(value)) {
-            return eval(splitting.join());
+            return eval(splitting.join(''));
         }
         return splitting[1];
     }
