@@ -63,10 +63,7 @@ export class Resolver {
                 propertyList[key] = `@${reference}`;
                 dependencies.push(reference);
             } else if (typeof value === 'string' && value.includes('($current)')) {
-                propertyList[key] = value.replace(
-                    /^([\w-_]+)\(\$current\)$/g,
-                    this.resolveCurrent(parentReferenceName),
-                );
+                propertyList[key] = value.replace(/\(%current\)/g, this.resolveCurrent(parentReferenceName));
             } else if (typeof value === 'object' && value !== null) {
                 dependencies.push(...this.resolveDependencies(parentReferenceName, value));
             }
