@@ -20,6 +20,7 @@ export declare class Resolver {
     private resolveReference;
     /**
      * @param {string} fixtureIdentify
+     * @param {string} value
      */
     private resolveCurrent;
     /**

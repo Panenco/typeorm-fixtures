@@ -89,13 +89,15 @@ class Resolver {
     }
     /**
      * @param {string} fixtureIdentify
+     * @param {string} value
      */
     resolveCurrent(fixtureIdentify, value) {
         const currentIndexRegExp = /^[a-z\_\-]+(\d+)$/gi;
-        const currentRegExp = /\(\$current((\+|\-|\/|\*)\d+)\)/g;
+        const currentRegExp = /\(\$current((\+|\-|\/|\*)\d+)\)/gi;
         const splitting = fixtureIdentify.split(currentIndexRegExp);
         if (currentRegExp.test(value)) {
-            return eval(splitting.join(''));
+            const calc = String(value.match(/(\+|\-|\/|\*)\d+/gi));
+            return eval(splitting[1].concat(calc));
         }
         return splitting[1];
     }
